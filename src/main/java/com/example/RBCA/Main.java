@@ -6,7 +6,15 @@ public class Main {
 
     public static void main(String[] args) {
 
-        System.out.println("=== CREATE USER ===");
+        System.out.println("=== USER VALIDATION TESTS ===");
+
+        testUser("admin_1", "Safonov Danil", "Safonov@mail.com");
+        testUser("ab", "Short Name", "short@mail.com");
+        testUser("user name", "Space User", "user@mail.com");
+        testUser("validUser", "", "valid@mail.com");
+        testUser("validUser2", "Jane Doe", "wrongEmail");
+
+        System.out.println("\n=== CREATE USER ===");
         User user = User.validate(
                 "admin_1",
                 "Safonov Danil",
@@ -71,5 +79,15 @@ public class Main {
         temporary.extend(LocalDateTime.now().plusDays(3).toString());
 
         System.out.println("Is active after extend? " + temporary.isActive());
+    }
+
+
+    private static void testUser(String username, String fullName, String email) {
+        try {
+            User user = User.validate(username, fullName, email);
+            System.out.println("SUCCESS: " + user.format());
+        } catch (IllegalArgumentException e) {
+            System.out.println("ERROR: " + e.getMessage());
+        }
     }
 }
