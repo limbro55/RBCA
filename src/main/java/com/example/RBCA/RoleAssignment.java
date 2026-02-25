@@ -8,4 +8,5 @@ public interface RoleAssignment {
     AssignmentMetadata metadata();
     boolean isActive();
     String assignmentType();
+
 }
