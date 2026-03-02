@@ -1,0 +1,111 @@
+package com.example.RBCA;
+
+import java.time.LocalDateTime;
+
+public class Main {
+
+    public static void main(String[] args) {
+
+//        System.out.println("=== USER VALIDATION TESTS ===");
+//
+//        testUser("admin_1", "Safonov Danil", "Safonov@mail.com");
+//        testUser("ab", "Short Name", "short@mail.com");
+//        testUser("user name", "Space User", "user@mail.com");
+//        testUser("validUser", "", "valid@mail.com");
+//        testUser("validUser2", "Jane Doe", "wrongEmail");
+
+        System.out.println("\n=== USER FILTER TESTS ===");
+
+        User user1 = User.validate("admin_1", "Danil Safonov", "admin@mail.com");
+        User user2 = User.validate("manager_1", "Ivan Petrov", "manager@gmail.com");
+        User user3 = User.validate("guest_1", "Petr Ivanov", "guest@mail.com");
+
+        UserFilter gmailFilter = UserFilters.byEmailDomain("gmail.com");
+        UserFilter nameFilter = UserFilters.byFullNameContains("ivan");
+
+        System.out.println("user1 gmail? " + gmailFilter.test(user1));
+        System.out.println("user2 gmail? " + gmailFilter.test(user2));
+        System.out.println("user3 gmail? " + gmailFilter.test(user3));
+
+        UserFilter combined = gmailFilter.and(nameFilter);
+
+        System.out.println("user2 gmail AND name contains ivan? "
+                + combined.test(user2));
+
+//        System.out.println("\n=== CREATE USER ===");
+//        User user = User.validate(
+//                "admin_1",
+//                "Safonov Danil",
+//                "Safonov@mail.com"
+//        );
+//        System.out.println(user.format());
+//
+//        System.out.println("\nCREATE PERMISSIONS");
+//        Permission readUsers =
+//                new Permission("read", "users", "Can view users");
+//        Permission writeUsers =
+//                new Permission("write", "users", "Can edit users");
+//
+//        System.out.println(readUsers.format());
+//        System.out.println(writeUsers.format());
+//
+//        System.out.println("\nCREATE ROLE ");
+//        Role adminRole =
+//                new Role("Administrator", "Full system access");
+//
+//        adminRole.addPermission(readUsers);
+//        adminRole.addPermission(writeUsers);
+//
+//        System.out.println(adminRole.format());
+//
+//        System.out.println("\nPERMANENT ASSIGNMENT");
+//        AssignmentMetadata metadata1 =
+//                AssignmentMetadata.now("system", "Initial setup");
+//
+//        PermanentAssignment permanent =
+//                new PermanentAssignment(user, adminRole, metadata1);
+//
+//        System.out.println(permanent.summary());
+//
+//        System.out.println("\nRevoking role...");
+//        permanent.revoke();
+//        System.out.println(permanent.summary());
+//
+//        System.out.println("\nTEMPORARY ASSIGNMENT");
+//
+//        String futureDate =
+//                LocalDateTime.now().plusDays(1).toString();
+//
+//        AssignmentMetadata metadata2 =
+//                AssignmentMetadata.now("admin", "Temporary access");
+//
+//        TemporaryAssignment temporary =
+//                new TemporaryAssignment(
+//                        user,
+//                        adminRole,
+//                        metadata2,
+//                        futureDate,
+//                        false
+//                );
+//
+//        System.out.println(temporary.summary());
+//
+//        System.out.println("\nIs expired? " + temporary.isExpired());
+//        System.out.println("Is active? " + temporary.isActive());
+//
+//        System.out.println("\nExtending temporary role...");
+//        temporary.extend(LocalDateTime.now().plusDays(3).toString());
+//
+//        System.out.println("Is active after extend? " + temporary.isActive());
+//    }
+//
+//
+//    private static void testUser(String username, String fullName, String email) {
+//        try {
+//            User user = User.validate(username, fullName, email);
+//            System.out.println("SUCCESS: " + user.format());
+//        } catch (IllegalArgumentException e) {
+//            System.out.println("ERROR: " + e.getMessage());
+//        }
+    }
+}
