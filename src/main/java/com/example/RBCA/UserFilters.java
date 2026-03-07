@@ -19,4 +19,9 @@ public final class UserFilters {
     public static UserFilter byFullNameContains(String text) {
         return user -> user.fullName().toLowerCase().contains(text.toLowerCase());
     }
+    public static UserFilter byUsernameContains(String substring) {
+        return user -> user.username()
+                .toLowerCase()
+                .contains(substring.toLowerCase());
+    }
 }
