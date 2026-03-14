@@ -14,6 +14,7 @@ class CommandParserTest {
         parser = new CommandParser();
         system = new RBACSystem();
         system.initialize();
+        CommandRegistry.registerAll(parser);
     }
 
     @Test
@@ -23,7 +24,8 @@ class CommandParserTest {
 
         parser.parseAndExecute("user-create", scanner, system);
 
-        assertTrue(system.getUserManager().exists("tester"));
+        boolean exists = system.getUserManager().exists("tester");
+        assertTrue(exists, "Пользователь 'tester' должен быть создан");
     }
 
     @Test

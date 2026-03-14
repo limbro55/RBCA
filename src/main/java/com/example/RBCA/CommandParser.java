@@ -14,18 +14,13 @@ public class CommandParser {
     public void parseAndExecute(String input, Scanner scanner, RBACSystem system) {
         if (input == null || input.isBlank()) return;
 
-        String[] parts = input.trim().split("\\s+", 2);
-        String commandName = parts[0].toLowerCase();
+        String commandName = input.trim().split("\\s+")[0].toLowerCase();
 
         Command cmd = commands.get(commandName);
         if (cmd != null) {
-            try {
-                cmd.execute(scanner, system);
-            } catch (Exception e) {
-                System.out.println("Ошибка при выполнении: " + e.getMessage());
-            }
+            cmd.execute(scanner, system);
         } else {
-            System.out.println("Команда '" + commandName + "' не найдена. Введите 'help' для списка.");
+            System.out.println("Команда '" + commandName + "' не найдена.");
         }
     }
 
