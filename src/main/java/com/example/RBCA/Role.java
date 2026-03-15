@@ -18,6 +18,10 @@ public class Role {
         this.description = description;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
     public void addPermission(Permission permission) {
         permissions.add(permission);
     }
