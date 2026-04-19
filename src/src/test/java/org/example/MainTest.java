@@ -64,7 +64,6 @@ class MainTest {
         for (Thread t : threads) t.start();
         for (Thread t : threads) t.join();
 
-        // если дошли сюда — потоки не упали
         assertTrue(true);
     }
 }
