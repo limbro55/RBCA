@@ -62,6 +62,9 @@ public class RBACSystem {
     public AssignmentManager getAssignmentManager() { return assignmentManager; }
     public String getCurrentUser() { return currentUser; }
     public void setCurrentUser(String username) { this.currentUser = username; }
+    public ReportGenerator getReportGenerator() {
+        return reportGenerator;
+    }
     public List<String> getFullUserReport() {
         return reportGenerator.buildUserReportParallel(userManager.findAll());
     }

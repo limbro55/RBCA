@@ -175,6 +175,30 @@ public class CommandRegistry {
                 System.out.println(">>> ДОСТУП ЗАПРЕЩЕН");
             }
         });
+
+        parser.registerCommand("report-parallel", "Генерация отчетов (Parallel Stream)", (s, sys) -> {
+            System.out.println("Генерация отчета по пользователям...");
+            List<String> userReport = sys.getReportGenerator().buildUserReportParallel(sys.getUserManager().findAll());
+            userReport.forEach(System.out::println);
+
+            System.out.println("\nГенерация матрицы прав...");
+            List<String> matrix = sys.getReportGenerator().buildPermissionsMatrixParallel(
+                    sys.getAssignmentManager(),
+                    sys.getUserManager().findAll()
+            );
+            matrix.forEach(System.out::println);
+        });
+
+        parser.registerCommand("user-find-p", "Параллельный поиск пользователей", (s, sys) -> {
+            System.out.print("Введите часть имени для поиска: ");
+            String query = s.nextLine();
+
+            // Вызов твоего нового метода в UserManager
+            var results = sys.getUserManager().findByFilterParallel(UserFilters.byFullNameContains(query));
+
+            System.out.println("Найдено (параллельно): " + results.size());
+            results.forEach(u -> System.out.println(u.format()));
+        });
     }
 
     private static void printUserTable(List<User> users) {
