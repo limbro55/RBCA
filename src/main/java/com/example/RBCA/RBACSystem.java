@@ -1,5 +1,6 @@
 package com.example.RBCA;
 
+import java.util.List;
 import java.util.Scanner;
 import java.util.stream.Collectors;
 
@@ -8,6 +9,7 @@ public class RBACSystem {
     private final RoleManager roleManager = new RoleManager();
     private final AssignmentManager assignmentManager = new AssignmentManager();
     private String currentUser = "system_admin";
+    private final ReportGenerator reportGenerator = new ReportGenerator();
 
     public void initialize() {
         // 1. Создаем права
@@ -60,6 +62,9 @@ public class RBACSystem {
     public AssignmentManager getAssignmentManager() { return assignmentManager; }
     public String getCurrentUser() { return currentUser; }
     public void setCurrentUser(String username) { this.currentUser = username; }
+    public List<String> getFullUserReport() {
+        return reportGenerator.buildUserReportParallel(userManager.findAll());
+    }
 }
 
 @FunctionalInterface
