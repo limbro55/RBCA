@@ -1,39 +1,53 @@
 package com.example.RBCA;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.stream.Collectors;
 
 public class RoleManager implements Repository<Role> {
 
-    private final Map<String, Role> rolesById = new HashMap<>();
-    private final Map<String, Role> rolesByName = new HashMap<>();
+    private final Map<String, Role> rolesById = new ConcurrentHashMap<>();
+    private final Map<String, Role> rolesByName = new ConcurrentHashMap<>();
+    private final ReadWriteLock lock = new ReentrantReadWriteLock();
 
     @Override
     public void add(Role role) {
-        if (role == null)
-            throw new IllegalArgumentException("Role cannot be null");
+        lock.writeLock().lock();
+        try {
+            if (rolesByName.containsKey(role.getName()))
+                throw new IllegalArgumentException("Role name already exists");
 
-        if (rolesByName.containsKey(role.getName()))
-            throw new IllegalArgumentException("Role name already exists");
-
-        rolesById.put(role.getId(), role);
-        rolesByName.put(role.getName(), role);
+            rolesById.put(role.getId(), role);
+            rolesByName.put(role.getName(), role);
+        } finally {
+            lock.writeLock().unlock();
+        }
     }
 
     @Override
     public boolean remove(Role role) {
-        if (role == null) return false;
-
-        rolesById.remove(role.getId());
-        rolesByName.remove(role.getName());
-        return true;
+        lock.writeLock().lock();
+        try {
+            if (role == null) return false;
+            rolesById.remove(role.getId());
+            rolesByName.remove(role.getName());
+            return true;
+        } finally {
+            lock.writeLock().unlock();
+        }
     }
 
     @Override
     public Optional<Role> findById(String id) {
-        return Optional.ofNullable(rolesById.get(id));
+        lock.readLock().lock();
+        try {
+            return Optional.ofNullable(rolesById.get(id));
+        } finally {
+            lock.readLock().unlock();
+        }
     }
-
     @Override
     public List<Role> findAll() {
         return new ArrayList<>(rolesById.values());

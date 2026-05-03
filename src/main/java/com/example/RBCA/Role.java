@@ -2,6 +2,7 @@ package com.example.RBCA;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class Role {
 
@@ -10,7 +11,7 @@ public class Role {
     private final String id;
     private final String name;
     private final String description;
-    private final Set<Permission> permissions = new HashSet<>();
+    private final Set<Permission> permissions = ConcurrentHashMap.newKeySet();
 
     public Role(String name, String description) {
         this.id = "role_" + counter++;

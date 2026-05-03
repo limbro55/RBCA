@@ -1,21 +1,22 @@
 package com.example.RBCA;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 public class UserManager implements Repository<User> {
 
-    private final Map<String, User> users = new HashMap<>();
+    private final Map<String, User> users = new ConcurrentHashMap<>();
 
     @Override
     public void add(User user) {
         if (user == null)
             throw new IllegalArgumentException("User cannot be null");
 
-        if (users.containsKey(user.username()))
+        // Используем putIfAbsent для атомарной проверки и добавления
+        if (users.putIfAbsent(user.username(), user) != null) {
             throw new IllegalArgumentException("Username already exists");
-
-        users.put(user.username(), user);
+        }
     }
 
     @Override
@@ -44,7 +45,6 @@ public class UserManager implements Repository<User> {
         users.clear();
     }
 
-    // ===== Дополнительные методы =====
 
     public Optional<User> findByUsername(String username) {
         return Optional.ofNullable(users.get(username));

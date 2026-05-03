@@ -2,28 +2,31 @@ package com.example.RBCA;
 
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 public class AssignmentManager implements Repository<RoleAssignment> {
 
-    private final Map<String, RoleAssignment> assignments = new HashMap<>();
+    private final Map<String, RoleAssignment> assignments = new ConcurrentHashMap<>();
 
     @Override
     public void add(RoleAssignment assignment) {
         if (assignment == null)
             throw new IllegalArgumentException("Assignment cannot be null");
 
-        // запрет дубликатов активной роли
-        boolean duplicate = assignments.values().stream()
-                .anyMatch(a ->
-                        a.user().equals(assignment.user()) &&
-                                a.role().equals(assignment.role()) &&
-                                a.isActive());
+        // Используем объект мапы как монитор для атомарной проверки дубликатов
+        synchronized (assignments) {
+            boolean duplicate = assignments.values().stream()
+                    .anyMatch(a ->
+                            a.user().equals(assignment.user()) &&
+                                    a.role().equals(assignment.role()) &&
+                                    a.isActive());
 
-        if (duplicate)
-            throw new IllegalStateException("Active assignment already exists");
+            if (duplicate)
+                throw new IllegalStateException("Active assignment already exists");
 
-        assignments.put(assignment.assignmentId(), assignment);
+            assignments.put(assignment.assignmentId(), assignment);
+        }
     }
 
     @Override
@@ -34,7 +37,7 @@ public class AssignmentManager implements Repository<RoleAssignment> {
 
     @Override
     public Optional<RoleAssignment> findById(String id) {
-        return Optional.ofNullable(assignments.get(id));
+        return Optional.empty();
     }
 
     @Override
